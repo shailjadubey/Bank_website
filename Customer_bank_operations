@@ -1,0 +1,492 @@
+package Bank_website;
+
+import java.util.List;
+import java.util.Scanner;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+/**
+ * @author shailja.dubey
+ *
+ */
+/**
+ * @author shailja.dubey
+ *
+ */
+public class Bank_operations {
+	private static final String NULL = null;
+	static Scanner s1=new Scanner(System.in);//Creating local variable
+	public static void main(String[] args) throws InterruptedException {
+		// TODO Auto-generated method stub
+		WebDriver driver;
+		//Creating local driver object
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\shailja.dubey\\Downloads\\chromedriver_win32\\chromedriver.exe");
+		//Chrome driver launching
+		driver=new ChromeDriver();
+		//Scanner s1=new Scanner(System.in);
+		//Open Bank Website , test case TC_001
+		driver.get("https://www.globalsqa.com/angularJs-protractor/BankingProject");
+		Thread.sleep(3000);
+		driver.manage().window().maximize();
+		System.out.println("Website launched Test case TC_001 pass");
+		String firsttitle=driver.getTitle();
+		System.out.println("Title of page after Website launched is -"+firsttitle);
+		String firstchecktitle="XYZ Bank";
+		//Implementing test case TC_002
+		if(firstchecktitle.equals(firsttitle))
+		{
+			System.out.println("Test case TC_002 Pass");
+		}
+		else
+		{
+			System.out.println("Test Case TC_002 Fail");
+		}
+		//Implementing Test case TC_003
+		System.out.println("Please select login type as 1.Customer Login 2.Bank Manager Login");
+		int login_type_no=s1.nextInt();
+		int Fail_testcase=0;
+		do  //do loop if test case fail so user can continue choose type 
+		{
+		if(login_type_no==1)
+		{
+			System.out.println("User select login type as Customer login Test case TC_003 pass");
+			Fail_testcase=0;
+			Customer_login(driver);
+		}
+		 else if(login_type_no==2)
+		{
+			System.out.println("User select login type as Bank Manger login Test case TC_003 pass");
+			Fail_testcase=0;
+			driver.findElement(By.xpath("//button[@ng-click='manager()']")).click();
+			System.out.println("Title of page after manager login is "+driver.getTitle());
+			Bank_manager_login(driver);//calling bank manager method
+		}
+		else
+		{
+			System.out.println("Test case TC_003 fail");
+			Fail_testcase=1;
+			System.out.println("Please select login type as 1.Customer Login 2.Bank Manager Login");
+			 login_type_no=s1.nextInt();
+		}
+		}while(Fail_testcase==1);
+		//Implementing Test Case TC_004
+	System.out.println("Program run done");	
+	
+	Thread.sleep(3000);
+	/*
+	 * try { driver.close(); System.out.println("Close browser"); } catch(Exception
+	 * e) { System.out.println("Connection issue"); } finally {
+	 * System.out.println("All code runs "); }
+	 */
+    System.out.println("Done!!");
+	}
+//method for manager 
+	private static void Bank_manager_login(WebDriver driver) throws InterruptedException {
+		// TODO Auto-generated method stub
+	//driver.findElement(By.xpath("//button[@ng-click='manager()']")).click();
+	//System.out.println("Title of page after manager login is "+driver.getTitle());
+	//Taking user input for operation type
+	System.out.println("Select what type of operation you want 1.Add Customer 2.Open Account 3.Customers 4.Homepage");
+	int manager_operation_type=s1.nextInt();//user input
+	int c=0;//creating variable for do while loop
+	do {
+		//Using do while loop for else condition and suggest user to enter valid type 
+	if(manager_operation_type==1)
+	{
+		System.out.println("Click on Add customer");
+		driver.findElement(By.xpath("//button[@ng-click='addCust()']")).click();
+		add_customer(driver);//creating method to perform all operation for adding customers
+		break;
+	}
+	else if(manager_operation_type==2)
+	{
+		System.out.println("Click on Open Account");
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[@ng-class='btnClass2']")).click();
+		Thread.sleep(3000);
+		open_account(driver);
+		break;
+	}
+	else if(manager_operation_type==3)
+	{
+		System.out.println("Click on Customers");
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[@ng-click='showCust()']")).click();
+		Thread.sleep(3000);
+		customers(driver);
+		break;
+	}
+	else if(manager_operation_type==4)
+	{
+		System.out.println("User navigates to Home page");
+		driver.findElement(By.xpath("//button[@class='btn home']")).click();
+		Thread.sleep(3000);
+	}
+	else 
+	{
+		System.out.println("Enter valid type");
+		manager_operation_type=s1.nextInt();
+		c=1;
+	}
+	}while(c==1);
+	
+	}
+
+	private static void customers(WebDriver driver) throws InterruptedException {
+	// TODO Auto-generated method stub
+		System.out.println("Customer list is-");
+		System.out.println(driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/div/div/table/tbody")).getText());
+		System.out.println("Select what opeartion you want 1.Searching 2.Delete customer 3.Other");
+		int search=s1.nextInt();
+		if(search==1)
+		{
+			System.out.println("Enter customer name");
+			String customer_name_search=s1.next();
+			driver.findElement(By.xpath("//input[@placeholder='Search Customer']")).sendKeys(customer_name_search);
+		    System.out.println("Searched result is");
+		    System.out.println(driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/div/div/table/tbody")).getText());
+		}
+		else if(search==1)
+		{
+			System.out.println("Enter customer name");
+			String customer_name_search=s1.next();
+			driver.findElement(By.xpath("//input[@placeholder='Search Customer']")).sendKeys(customer_name_search);
+		    System.out.println("Are you sure you want to delete "+customer_name_search+" Customer");
+		    int k=s1.nextInt();
+		    if(k==1)
+		    {
+		    	driver.findElement(By.xpath("//button[@ng-click='deleteCust(cust)']")).click();
+		    	System.out.println("Customer "+customer_name_search+ "Deleted");
+		    }
+		    else
+		    {
+		    	customers(driver);
+		    }
+		}
+		else
+		{
+			Bank_manager_login(driver);	
+		}
+}                                           
+	
+	private static void open_account(WebDriver driver) throws InterruptedException {
+	// TODO Auto-generated method stub
+		
+	Select name_from_dropdown=new Select(driver.findElement(By.id("userSelect")));
+	List<WebElement> customer_list=name_from_dropdown.getOptions();
+	System.out.println("Customer list -");
+			for(int j=0;j<customer_list.size();j++)
+			{
+				System.out.println(customer_list.get(j).getText());
+			}
+			System.out.println("Enter customer name");
+			String cust_Firstname=s1.next();
+			String cust_lastname=s1.next();
+			String cust_fullname=cust_Firstname+" "+cust_lastname;
+			System.out.println("User input is-"+cust_fullname);
+			try
+	{
+		name_from_dropdown.selectByVisibleText(cust_fullname);
+		System.out.println("Customer "+cust_fullname +" Selected");
+	}
+	catch(Exception e)
+	{
+		System.out.println("Customer not found on list");
+		System.out.println("Please add customer and try again");
+		driver.findElement(By.xpath("//button[@ng-click='addCust()']")).click();
+		add_customer(driver);
+	}
+	System.out.println("Currency in list are");
+	Select currency=new Select(driver.findElement(By.id("currency")));
+	List<WebElement> curr_list=currency.getOptions();
+	for(int i=0;i<curr_list.size();i++)
+	{
+		System.out.println(curr_list.get(i).getText());
+	}
+	System.out.println("Select currency from the list");
+	String currency_select=s1.next();
+	try {
+	currency.selectByVisibleText(currency_select);
+	System.out.println("Currency selected");
+	}
+	catch(Exception e)
+	{
+		System.out.println("Select valid currency");
+		String currency_select1=s1.next();
+		currency.selectByVisibleText(currency_select1);
+		System.out.println("Currency selected");
+	}
+	driver.findElement(By.xpath("//button[@type='submit']")).click();
+	System.out.println("Click on process");
+	Alert accountpopup=driver.switchTo().alert();
+	System.out.println("Confirmation message display");
+	System.out.println(accountpopup.getText());
+	accountpopup.accept();
+	Bank_manager_login(driver);
+}
+	private static void add_customer(WebDriver driver) throws InterruptedException {
+	// TODO Auto-generated method stub
+		System.out.println("Enter your first name");
+		String first_name=s1.next();
+	    WebElement first_name_path=driver.findElement(By.xpath("//input[@placeholder='First Name']"));
+	    first_name_path.clear();
+	    first_name_path.sendKeys(first_name);
+		System.out.println("Enter your last name");
+		String last_name=s1.next();
+		WebElement last_name_path=driver.findElement(By.xpath("//input[@placeholder='Last Name']"));
+		last_name_path.clear();
+		last_name_path.sendKeys(last_name);
+		System.out.println("Enter postal code");
+		String postal_code=s1.next();
+		WebElement postal_code_path=driver.findElement(By.xpath("//input[@placeholder='Post Code']"));
+		postal_code_path.clear();
+		postal_code_path.sendKeys(postal_code);
+		System.out.println("Before Adding customer verify details");
+		System.out.println("First Name-"+first_name+ "\nLast Name-"+last_name +"\nPostal Code-"+postal_code);
+	    System.out.println("Enter 1 if details are correct and 2 for incorrect");
+	    int a=s1.nextInt();
+	    if(a==1)
+	    {
+	    	System.out.println("Click on Add customer button");
+	    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	    }
+	    else{
+	        System.out.println("Enter details again");
+	    	add_customer(driver);
+	    }
+	    Alert addpopup=driver.switchTo().alert();
+	    String Popup_message=addpopup.getText();
+	    System.out.println("Popup display");
+	    	System.out.println(Popup_message);
+	    addpopup.accept();
+	    Bank_manager_login(driver);
+}
+	private static void Customer_login(WebDriver driver) throws InterruptedException {
+		// TODO Auto-generated method stub
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[@ng-click='customer()']")).click();//click on customer option
+		System.out.println("Title of page after customer login is "+driver.getTitle());
+		Thread.sleep(3000);
+		Select customer_dropdown=new Select(driver.findElement(By.id("userSelect")));//dropdown xpath selection
+		List<WebElement> namedetails=customer_dropdown.getOptions();
+		for(int w=0;w<namedetails.size();w++)// loop for printing all dropdown options
+		{
+			System.out.println(namedetails.get(w).getText());//printing names
+		}
+		int name_not_found=0;
+		do
+		{
+		System.out.println("Enter your name");//taking user input for selecting customer
+		String first_name2=s1.next();//first name
+		String last_name2=s1.next();//last name
+		String fullname2=first_name2+" "+last_name2;//merging names 
+		System.out.println("You have enter -"+fullname2);
+		try
+		{
+		customer_dropdown.selectByVisibleText(fullname2);//selecting user name from the list
+		name_not_found=0;//condition to stop loop as customer found
+		driver.findElement(By.xpath("//button[@class='btn btn-default']")).click();//login button path
+		Thread.sleep(3000);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Enter valid name");
+			//in case if name not found
+          name_not_found=1;//condition to continue loop
+		}
+		}while(name_not_found==1);
+		System.out.println("Click on login");//After selecting customer from list click on login
+		
+		try {
+			Thread.sleep(3000);
+		System.out.println("Printing your details- "+driver.findElement(By.xpath("//div[@class='borderM box padT20 ng-scope']")).getText());
+		System.out.println("Customer name-"+driver.findElement(By.xpath("//span[@class='fontBig ng-binding']")).getText());
+		System.out.println("Account Number -");
+		//select dropdown option for account number
+		Select acc_num=new Select(driver.findElement(By.id("accountSelect")));
+		List<WebElement> accountnum=acc_num.getOptions();
+		for(int i=0;i<accountnum.size();i++)
+		{
+			System.out.println(accountnum.get(i).getText());//printing all account numbers
+		}
+		int a_id=0;
+		String accountnumber=NULL;
+		do//loop for taking valid account number from user
+		{
+		System.out.println("Enter account number for which you want to see all details");
+		String acc_id=s1.next();
+		System.out.println("You have enter account number-"+acc_id);
+		try
+		{
+		acc_num.selectByVisibleText(acc_id);
+		System.out.println("Account found ");
+		a_id=0;
+		System.out.println("Account selected");
+		accountnumber=acc_id;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Account number incorrect enter correct number ");
+		    a_id=1;	
+		}
+		}while(a_id==1);
+		System.out.println("Verify correct account details display ");
+		String acc_wind_num=driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/strong[1]")).getText();
+        //path for account number text
+		if(acc_wind_num.equals(accountnumber))
+		{
+			System.out.println("Correct account details display");
+		}
+		else
+		{
+			System.out.println("Incorrect details display");
+			System.out.println("Account is not registered");
+		}
+		System.out.println("Account Balance - "+driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/strong[2]")).getText());
+        System.out.println("Account Currency- "+driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/strong[3]")).getText());
+        int type=0;
+        do
+        {
+        System.out.println("Select which type of service you want 1.Trancaction 2.Deposite 3.Withrawl ");
+        int service_type=s1.nextInt();
+        if(service_type==1)
+        {
+        	transaction(driver);
+        }
+        else if(service_type==2)
+        {
+        	deposite(driver);
+        }
+        else
+        {
+        	withdrawl(driver);
+        }
+		System.out.println("Do you want other service");
+		int ser=s1.nextInt();
+		if(ser==1)
+		{
+			type=1;
+		}
+		else
+		{
+			type=0;
+		}
+		}while(type==1);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Invalid path");
+		}
+	    try
+		{
+		driver.findElement(By.xpath("//button[@class='btn home']")).click();//click on Home button to go back
+		Thread.sleep(3000);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Enter valid xpath");
+		}
+		
+		System.out.println("Home button click");
+}
+	private static void withdrawl(WebDriver driver) {
+		// TODO Auto-generated method stub
+		driver.findElement(By.xpath("//button[@ng-click='withdrawl()']")).click();
+		System.out.println("withdrawl screen display");
+		System.out.println("Enter amount ");
+		String amount1=s1.next();
+		System.out.println("You have enter "+amount1+" Amount");
+		WebElement amount_withdrawl=driver.findElement(By.xpath("//input[@type='number']"));
+		amount_withdrawl.clear();
+		amount_withdrawl.sendKeys(amount1);
+		driver.findElement(By.xpath("//button[@type='submit']")).click();
+		System.out.println("Withdrwal amount entered");
+		System.out.println("Checking amount withrwal or not");
+		String withdrwal_message=driver.findElement(By.xpath("//span[@ng-show='message']")).getText();
+		String messageonsite="Transaction successful";
+		if(withdrwal_message.equals(messageonsite))
+		{
+			System.out.println("Amount withdrwal successful");
+		}
+		else
+		{
+			System.out.println("Amount is not withdrwal");
+		}
+	}
+	private static void deposite(WebDriver driver) {
+		// TODO Auto-generated method stub
+		driver.findElement(By.xpath("//button[@ng-click='deposit()']")).click();
+		System.out.println("Deposite screen display");
+		System.out.println("Enter amount ");
+		String amount=s1.next();
+		System.out.println("You have enter "+amount +" Amount");
+		WebElement amount_deposite=driver.findElement(By.xpath("//input[@type='number']"));
+		amount_deposite.clear();
+		amount_deposite.sendKeys(amount);
+		driver.findElement(By.xpath("//button[@type='submit']")).click();
+		System.out.println("Deposite amount enter");
+		System.out.println("Checking successfull message");
+		String message=driver.findElement(By.xpath("//span[@ng-show='message']")).getText();
+		String mess="Deposit Successful";
+		if(mess.equals(message))
+		{
+			System.out.println("Amount deposite successful");
+		}
+		else
+		{
+			System.out.println("Amount not deposite");
+		}
+	}
+	private static void transaction(WebDriver driver) {
+		// TODO Auto-generated method stub
+		driver.findElement(By.xpath("//button[@ng-click='transactions()']")).click();//click on transcation button
+	    System.out.println("Transcation screen display");
+	    try {
+	    System.out.println("Transcation details-");
+	    System.out.println(driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/table/tbody")).getText());
+	    }
+	    catch(Exception e)
+	    {
+	    	System.out.println("Path for transcation is incorrect");
+	    }
+	    System.out.println("Click on what type of operation you want 1.Filter on Date time 2.Go Back 3.Reset");
+	    int filter_op=s1.nextInt();
+	    if(filter_op==1)
+	    {
+	    	System.out.println("Filter operation on Date and time");
+	    	try {
+	    	driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/table/thead/tr/td[1]/a")).click();
+	    	}
+	    	catch(Exception e)
+	    	{
+	    		System.out.println("Path is incorrect for date time filter");
+	    	}
+	    	try {
+	    	System.out.println("After filter list");
+	    	System.out.println(driver.findElement(By.xpath("/html/body/div/div/div[2]/div/div[2]/table/tbody")).getText());
+	    	}
+	    	catch(Exception e)
+	    	{
+	    		System.out.println("Path for body is incorrect");
+	    	}
+	    }
+	else if(filter_op==2)
+	{
+		System.out.println("Click on Back button ");
+		driver.findElement(By.xpath("//button[@ng-click='back()']")).click();
+	}
+	else if(filter_op==3)
+	{
+		System.out.println("Click on reset button");
+		driver.findElement(By.xpath("//button[@ng-click='reset()']")).click();
+	}
+	else
+	{System.out.println("Back to Home page");}
+}
+
+}
